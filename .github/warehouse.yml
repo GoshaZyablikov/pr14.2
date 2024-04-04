@@ -24,6 +24,14 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
+    - name: Analyze code with StyleCop
+      run: dotnet add package StyleCop.Analyzers --version 1.2.0
+      continue-on-error: true
+
+    - name: Analyze code with Roslyn Analyzers
+      run: dotnet add package Microsoft.CodeAnalysis.FxCopAnalyzers --version 3.3.0
+      continue-on-error: true
+
     - name: Build project
       run: dotnet build --configuration Release
 
