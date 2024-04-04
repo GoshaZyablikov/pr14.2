@@ -1,10 +1,6 @@
-name: C# Syntax Check
-
+name: ASP.NET Check Style
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
@@ -21,19 +17,14 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
+    - name: Install StyleCop.Analyzers
+      run: dotnet add package StyleCop.Analyzers --version 1.2.0
+
     - name: Restore dependencies
       run: dotnet restore
-
-    - name: Analyze code with StyleCop
-      run: dotnet add package StyleCop.Analyzers --version 1.2.0
-      continue-on-error: true
-
-    - name: Analyze code with Roslyn Analyzers
-      run: dotnet add package Microsoft.CodeAnalysis.FxCopAnalyzers --version 3.3.0
-      continue-on-error: true
 
     - name: Build project
       run: dotnet build --configuration Release
 
-    - name: Run code analysis
+    - name: Analyze code with StyleCop
       run: dotnet analyze --verbosity diagnostic
