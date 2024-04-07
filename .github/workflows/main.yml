@@ -38,10 +38,3 @@ jobs:
       with:
         name: build-artifacts
         path: bin/Release/net6.0
-
-    - name: Deploy to staging
-      uses: GoshaZyablikov/pr14.2@main
-      with:
-        server: staging.example.com
-        username: ${{ secrets.STAGING_USERNAME }}
-        password: ${{ secrets.STAGING_PASSWORD }}
