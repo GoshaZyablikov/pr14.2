@@ -1,4 +1,4 @@
-name: pipelineC
+name: pipelineCSharp
 
 on:
   push:
@@ -7,10 +7,11 @@ on:
   pull_request:
     branches:
       - main
-jobs: 
+
+jobs:
   syntax_check:
     runs-on: ubuntu-latest
-    
+      
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
@@ -20,11 +21,27 @@ jobs:
       with:
         dotnet-version: '6.0.x'
     
-    - name: Restore dependencies
+    - name: Install dependencies
       run: dotnet restore
     
     - name: Build project
       run: dotnet build --configuration Release --no-restore 
-      
-    - name: Run syntax check
-      run: dotnet build --no-restore /p:WarningLevel=0
+
+    - name: Run unit tests
+      run: dotnet test --no-restore --verbosity normal
+
+    - name: Run code analysis
+      run: dotnet analyze --verbosity diagnostic
+
+    - name: Publish artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-artifacts
+        path: bin/Release/net6.0
+
+    - name: Deploy to staging
+      uses: MyCustomActions/deploy-to-staging@v1
+      with:
+        server: staging.example.com
+        username: ${{ secrets.STAGING_USERNAME }}
+        password: ${{ secrets.STAGING_PASSWORD }}
