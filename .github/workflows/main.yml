@@ -1,16 +1,32 @@
 name: pipelineCs
-on:  push:
-    branches:      - main
-  pull_request:    branches:
+
+on:
+  push:
+    branches:
       - main
-jobs:   syntax_check:
-    runs-on: ubuntu-latest    
-    steps:    - name: Checkout Repository
-      uses: actions/checkout@v2    
-    - name: Setup .NET Core      uses: actions/setup-dotnet@v1
-      with:        dotnet-version: '6.0.x'
-        - name: Restore dependencies
-      run: dotnet restore    
-    - name: Build project      run: dotnet build --configuration Release --no-restore 
-          - name: Run syntax check
+  pull_request:
+    branches:
+      - main
+
+jobs: 
+  syntax_check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+    
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build project
+      run: dotnet build --configuration Release --no-restore 
+      
+    - name: Run syntax check
       run: dotnet build --no-restore /p:WarningLevel=0
+
